@@ -8,6 +8,10 @@ arxiv link here soon!
 ![M_level_2](images/Flat_4.gif)
 ![M_level_2](images/Ma_4.gif)
 
+# Discord Community For Support
+
+For any support questions please join the [Griddly Discord Community](https://discord.gg/xuR8Dsv)
+
 ## Install Griddly
 
 These experiments use several custom griddly environments.

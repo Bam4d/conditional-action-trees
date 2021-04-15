@@ -1,6 +1,7 @@
 import wandb
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+from matplotlib.offsetbox import AnchoredText
 
 CB_color_cycle = ['#377eb8', '#ff7f00', '#4daf4a',
                   '#f781bf', '#a65628', '#984ea3',
@@ -31,8 +32,8 @@ def get_data_for_experiments(api, experiment_type):
 def plot_training_comparison(experiment_data):
     baseline_run, baseline_flat_run, CAT_collapsed_run, CAT_conditional_run = experiment_data
 
-    l_b = baseline_run.plot(label='Baseline')
-    l_bf = baseline_flat_run.plot(label='Flat')
+    l_b = baseline_run.plot(label='No Masking')
+    l_bf = baseline_flat_run.plot(label='Depth 2')
     l_CATcl = CAT_collapsed_run.plot(label='CAT_CL')
     l_CATcd = CAT_conditional_run.plot(label='CAT_CD')
 
@@ -53,7 +54,6 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(10, 5))
 
     m_plot = plt.subplot(2, 3, 1)
-
     plot_training_comparison(experiments_M)
     mp_plot = plt.subplot(2, 3, 2)
     plot_training_comparison(experiments_MP)
@@ -66,23 +66,42 @@ if __name__ == '__main__':
 
     m_plot.title.set_text('M')
     m_plot.set_xlabel(None)
+    m_plot.set_ylabel('Ave. Reward')
     mp_plot.title.set_text('MP')
     mp_plot.set_xlabel(None)
     mps_plot.title.set_text('MPS')
-    mps_plot.set_xlabel(None)
+    mps_plot.set_xlabel('Steps')
     ma_plot.title.set_text('Ma')
-    ma_plot.set_xlabel(None)
+    ma_plot.set_xlabel('Steps')
+    ma_plot.set_ylabel('Ave. Reward')
     msa_plot.title.set_text('MSa')
-    msa_plot.set_xlabel(None)
+    msa_plot.set_xlabel('Steps')
 
-    labels = ['Baseline', 'Flat', 'CAT_CL', 'CAT_CD']
+
+    labels = [
+        'No Masking',
+        'Depth 2',
+        'CAT_CL',
+        'CAT_CD',
+    ]
     fig.legend(
         labels=labels,
         loc="lower right",
         borderaxespad=0.1,
         prop={'size': 9},
         framealpha=1.0,
-        bbox_to_anchor=(0, 0.1, 0.9, 0)
+        bbox_to_anchor=(0, 0.25, 0.9, 0)
     )
+
+    experiments_legend = '''
+M = Move
+MP = Move+Push
+MPS = Move+Push+Separate
+Ma = Move-Agent
+MSa = Move+Separate-Agent
+'''
+
+    fig.text(0.73, 0.01, experiments_legend)
+
     plt.tight_layout()
     plt.savefig('plots_training.pdf')
