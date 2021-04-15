@@ -36,8 +36,8 @@ parser.add_argument('--capture-video', action='store_true', help='enable video c
 parser.add_argument('--video-directory', default='videos', help='directory of video')
 parser.add_argument('--video-frequency', type=int, default=1000000, help='Frequency of videos')
 
-parser.add_argument('--allow-nop', action='store_true', default=False, help='allow NOP actions in action tree')
-parser.add_argument('--vtrace-masking', action='store_true', default=False, help='use masks in vtrace calculations')
+parser.add_argument('--allow-nop', action='store_true', default=True, help='allow NOP actions in action tree')
+parser.add_argument('--vtrace-masking', action='store_true', default=True, help='use masks in vtrace calculations')
 
 parser.add_argument('--seed', type=int, default=69420, help='seed for experiments')
 
