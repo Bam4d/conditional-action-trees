@@ -30,13 +30,16 @@ First navigate to this directory then:
 pip install -r requirements.txt
 ```
 
-## :warning: Rllib < 1.3.0 :warning: 
+## :warning: Rllib < 1.4.0 :warning: 
 
-The current master of rllib has some bugs that are fixed on our own RLLib branch which can be found here:
+The current 1.3.0 release of rllib has some bugs that are fixed in the latest RLLib master branch which can be found here:
 
-```
-git clone git@github.com:Bam4d/ray.git
-```
+pip install -U https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-2.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl
+
+### WandB Integration
+
+To upload the results to your own WandB account, create a `.wandb_rc` file in your user directory that contains your WandB API key.
+All results and videos will then be automatically uploaded.
 
 ## Running experiments
 
@@ -79,19 +82,19 @@ rllib_conditional_actions.py  --experiment-name="MSa" --yaml-file="clusters_po_w
 
 The experiments are performed using several custom RLLib classes:
 
-### ConditionalActionImpalaTrainer
+### [ConditionalActionImpalaTrainer](https://github.com/Bam4d/Griddly/blob/develop/python/griddly/util/rllib/torch/conditional_actions/conditional_action_policy_trainer.py#L119)
 
 Contains the code for setting up the mixin and the modified vtrace policy
 
-### ConditionalActionMixin
+### [ConditionalActionMixin](https://github.com/Bam4d/Griddly/blob/develop/python/griddly/util/rllib/torch/conditional_actions/conditional_action_mixin.py)
 
 Overrides the typical policy rollout method to use the Conditional Action Trees when sampling actions
 
-### ConditionalActionVTraceTorchPolicy
+### [ConditionalActionVTraceTorchPolicy](https://github.com/Bam4d/Griddly/blob/develop/python/griddly/util/rllib/torch/conditional_actions/conditional_action_policy_trainer.py#L104)
 
 Applies constructed masks to the vtrace policy
 
-### TorchConditionalMaskingExploration
+### [TorchConditionalMaskingExploration](https://github.com/Bam4d/Griddly/blob/develop/python/griddly/util/rllib/torch/conditional_actions/conditional_action_exploration.py)
 
 Contains the tree traversal and mask creation code
 
@@ -101,6 +104,7 @@ The 5 environments that are used for the paper are contained in this repository 
 
 They are all based on the `Clusters` environment which has full documentation [here](https://griddly.readthedocs.io/en/latest/games/Clusters/index.html)
 
-## Wandb
+## WandB Results
 
 View all of the experiments, training results and videos [here](https://wandb.ai/chrisbam4d/conditional_action_trees)
+

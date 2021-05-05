@@ -8,7 +8,7 @@ from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.tune.registry import register_env
 
 from griddly import gd
-from griddly.util.rllib.callbacks import GriddlyCallbacks
+from griddly.util.rllib.callbacks import GriddlyCallbacks, VideoCallback
 from griddly.util.rllib.environment.core import RLlibEnv
 from griddly.util.rllib.torch.agents.conv_agent import SimpleConvAgent
 from griddly.util.rllib.torch.conditional_actions.conditional_action_policy_trainer import \
@@ -59,12 +59,13 @@ if __name__ == '__main__':
     ModelCatalog.register_custom_model("SimpleConv", SimpleConvAgent)
 
     wandbLoggerCallback = WandbLoggerCallback(
-        project='conditional_action_trees',
+        project='conditional_action_trees_reproduce',
         api_key_file='~/.wandb_rc',
         dir=args.root_directory
     )
 
     max_training_steps = args.max_training_steps
+    gdy_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), args.yaml_file)
 
     config = {
         'framework': 'torch',
@@ -74,7 +75,7 @@ if __name__ == '__main__':
         'num_gpus_per_worker': float(args.num_gpus_per_worker),
         'num_cpus_per_worker': args.num_cpus_per_worker,
 
-        'callbacks': GriddlyCallbacks,
+        'callbacks': VideoCallback,
 
         'model': {
             'custom_model': 'SimpleConv',
@@ -90,7 +91,7 @@ if __name__ == '__main__':
             'generate_valid_action_trees': True,
             #'level': 0,
             'random_level_on_reset': True,
-            'yaml_file': args.yaml_file,
+            'yaml_file': gdy_file,
             'global_observer_type': gd.ObserverType.SPRITE_2D,
             'max_steps': 1000,
         },

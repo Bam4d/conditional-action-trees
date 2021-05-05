@@ -6,6 +6,7 @@ import gym
 import numpy as np
 import ray
 import torch
+from griddly.util.rllib.callbacks import VideoCallback
 from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from torch import nn
 from gym.spaces import MultiDiscrete, Dict, Box
@@ -16,7 +17,6 @@ from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.tune.registry import register_env
 
 from griddly import gd
-from griddly.util.rllib.callbacks import GriddlyCallbacks
 from griddly.util.rllib.environment.core import RLlibEnv
 from griddly.util.rllib.torch.agents.common import layer_init
 
@@ -201,8 +201,7 @@ if __name__ == '__main__':
     sep = os.pathsep
     os.environ['PYTHONPATH'] = sep.join(sys.path)
 
-    #ray.init(include_dashboard=False, num_gpus=args.num_gpus, num_cpus=args.num_cpus)
-    ray.init(include_dashboard=False, num_gpus=1, num_cpus=args.num_cpus, local_mode=True)
+    ray.init(include_dashboard=False, num_gpus=1, num_cpus=args.num_cpus)
     env_name = "ray-griddly-env"
 
 
@@ -215,12 +214,13 @@ if __name__ == '__main__':
     ModelCatalog.register_custom_model("SimpleConv", SimpleConvFlatAgent)
 
     wandbLoggerCallback = WandbLoggerCallback(
-        project='conditional_action_trees',
+        project='conditional_action_trees_reproduce',
         api_key_file='~/.wandb_rc',
         dir=args.root_directory
     )
 
     max_training_steps = args.max_training_steps
+    gdy_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), args.yaml_file)
 
     config = {
         'framework': 'torch',
@@ -230,7 +230,7 @@ if __name__ == '__main__':
         'num_gpus_per_worker': float(args.num_gpus_per_worker),
         'num_cpus_per_worker': args.num_cpus_per_worker,
 
-        'callbacks': GriddlyCallbacks,
+        'callbacks': VideoCallback,
 
         'model': {
             'custom_model': 'SimpleConv',
@@ -240,7 +240,7 @@ if __name__ == '__main__':
         'env_config': {
             'generate_valid_action_trees': False,
             'random_level_on_reset': True,
-            'yaml_file': args.yaml_file,
+            'yaml_file': gdy_file,
             'global_observer_type': gd.ObserverType.SPRITE_2D,
             'max_steps': 1000,
         },
