@@ -8,7 +8,7 @@ from ray.tune.integration.wandb import WandbLoggerCallback
 from ray.tune.registry import register_env
 
 from griddly import gd
-from griddly.util.rllib.callbacks import GriddlyCallbacks, VideoCallback
+from griddly.util.rllib.callbacks import VideoCallback
 from griddly.util.rllib.environment.core import RLlibEnv
 from griddly.util.rllib.torch.agents.conv_agent import SimpleConvAgent
 from griddly.util.rllib.torch.conditional_actions.conditional_action_policy_trainer import \
