@@ -1,16 +1,16 @@
 # Conditional Action Trees
 
-This repository complements the "Conditional Actions Tree" paper.
-
-arxiv link here soon!
-
 ![M_level_2](images/M_2.gif)
 ![M_level_2](images/Flat_4.gif)
 ![M_level_2](images/Ma_4.gif)
 
-# Discord Community For Support
+## Arxiv Paper: https://arxiv.org/abs/2104.07294
 
-For any support questions please join the [Griddly Discord Community](https://discord.gg/xuR8Dsv)
+## Abstract
+
+There are relatively few conventions followed in reinforcement learning (RL) environments to structure the action spaces. As a consequence the application of RL algorithms to tasks with large action spaces with multiple components require additional effort to adjust to different formats. In this paper we introduce `Conditional Action Trees` with two main objectives: (1) as a method of structuring action spaces in RL to generalise across several action space specifications, and (2) to formalise a process to significantly reduce the action space by decomposing it into multiple sub-spaces, favoring a multi-staged decision making approach. We show several proof-of-concept experiments validating our scheme, ranging from environments with basic discrete action spaces to those with large combinatorial action spaces commonly found in RTS-style games.
+
+### Join the Discord Community! [https://discord.gg/xuR8Dsv](https://discord.gg/xuR8Dsv)
 
 ## Install Griddly
 
