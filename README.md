@@ -12,17 +12,7 @@ There are relatively few conventions followed in reinforcement learning (RL) env
 
 ### Join the Discord Community! [https://discord.gg/xuR8Dsv](https://discord.gg/xuR8Dsv)
 
-## Install Griddly
-
-These experiments use several custom griddly environments.
-
-```
-pip install griddly
-```
-
-
-
-## Install Dependencies for this experiment
+## Install Dependencies for the experiments
 
 First navigate to this directory then:
 
@@ -35,6 +25,11 @@ pip install -r requirements.txt
 The current 1.3.0 release of rllib has some bugs that are fixed in the latest RLLib master branch which can be found here:
 
 pip install -U https://s3-us-west-2.amazonaws.com/ray-wheels/latest/ray-2.0.0.dev0-cp38-cp38-manylinux2014_x86_64.whl
+
+### Install Pytorch
+
+Instructions on how to install pytorch can be found [here](https://pytorch.org/get-started/locally/)
+
 
 ### WandB Integration
 

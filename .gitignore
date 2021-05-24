@@ -130,3 +130,6 @@ dmypy.json
 
 # Wandb
 wandb/
+
+# PyCharm
+.idea/
