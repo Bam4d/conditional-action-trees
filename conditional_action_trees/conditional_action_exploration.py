@@ -5,9 +5,11 @@ from gym.spaces import Discrete, MultiDiscrete
 from torch.distributions import Categorical
 import numpy as np
 
+
 class TorchConditionalMaskingExploration():
 
-    def __init__(self, model, dist_inputs, valid_action_trees, explore=False, invalid_action_masking='conditional', allow_nop=False):
+    def __init__(self, model, dist_inputs, valid_action_trees, explore=False, invalid_action_masking='conditional',
+                 allow_nop=False):
         self._valid_action_trees = valid_action_trees
 
         self._num_inputs = dist_inputs.shape[0]
@@ -25,8 +27,6 @@ class TorchConditionalMaskingExploration():
         self._explore = explore
 
         self._inputs_split = dist_inputs.split(tuple(self._action_space_shape), dim=1)
-
-        self._full_tree = self._fill_node(self._action_space_shape,0)
 
     def _mask_and_sample(self, options, logits, is_parameters=False):
 
@@ -46,7 +46,6 @@ class TorchConditionalMaskingExploration():
 
         # if not self._allow_nop and is_parameters:
         #     assert sampled != 0
-
 
         return sampled, out_logits, logp, mask
 
@@ -74,12 +73,12 @@ class TorchConditionalMaskingExploration():
 
         # In the case there are no available actions for the player
         if len(subtree_options) == 0:
-            subtree = self._full_tree
-            # build_tree = subtree
-            # for _ in range(self._num_action_parts):
-            #     build_tree[0] = {}
-            #     build_tree = build_tree[0]
+            build_tree = subtree
+            for _ in range(self._num_action_parts):
+                build_tree[0] = {}
+                build_tree = build_tree[0]
             subtree_options = list(subtree.keys())
+            subtree = build_tree
 
         # If we want very basic action masking where parameterized masks are superimposed we use this
         if self._invalid_action_masking == 'collapsed':
@@ -105,26 +104,24 @@ class TorchConditionalMaskingExploration():
                     logp_parts = torch.zeros([self._num_action_parts])
                     mask_offset = 0
                     for a in range(self._num_action_parts):
+                        dist_part = self._inputs_split[a]
+                        is_parameters = a == (self._num_action_parts - 1)
+                        sampled, masked_part_logits, logp, mask_part = self._mask_and_sample(subtree_options,
+                                                                                             dist_part[i],
+                                                                                             is_parameters)
 
-                        try:
-                            dist_part = self._inputs_split[a]
-                            is_parameters = a==(self._num_action_parts-1)
-                            sampled, masked_part_logits, logp, mask_part = self._mask_and_sample(subtree_options, dist_part[i], is_parameters)
+                        # Set the action and the mask for each part of the action
+                        actions[i, a] = sampled
+                        masked_logits[i, mask_offset:mask_offset + self._action_space_shape[a]] = masked_part_logits
+                        mask[i, mask_offset:mask_offset + self._action_space_shape[a]] = mask_part
 
-                            # Set the action and the mask for each part of the action
-                            actions[i, a] = sampled
-                            masked_logits[i, mask_offset:mask_offset + self._action_space_shape[a]] = masked_part_logits
-                            mask[i, mask_offset:mask_offset + self._action_space_shape[a]] = mask_part
+                        logp_parts[a] = logp
 
-                            logp_parts[a] = logp
+                        mask_offset += self._action_space_shape[a]
 
-                            mask_offset += self._action_space_shape[a]
-
+                        if len(subtree.keys()) > 0:
                             subtree = subtree[int(sampled)]
                             subtree_options = list(subtree.keys())
-                        except ValueError as e:
-                            print(e)
-
 
                     logp_sums[i] = torch.sum(logp_parts)
 

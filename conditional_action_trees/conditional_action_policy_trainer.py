@@ -47,7 +47,7 @@ def build_invalid_masking_vtrace_loss(policy, model, dist_class, train_batch):
     else:
         mask = torch.ones_like(rewards)
 
-    model_out += torch.log(invalid_action_mask)
+    model_out += torch.maximum(torch.tensor(torch.finfo().min), torch.log(invalid_action_mask))
     action_dist = dist_class(model_out, model)
 
     if isinstance(output_hidden_shape, (list, tuple, np.ndarray)):
@@ -116,5 +116,6 @@ def get_vtrace_policy_class(config):
         raise NotImplementedError('Tensorflow not supported')
 
 
-ConditionalActionImpalaTrainer = ImpalaTrainer.with_updates(default_policy=ConditionalActionVTraceTorchPolicy,
+ConditionalActionImpalaTrainer = ImpalaTrainer.with_updates(name="ConditionalActionImpalaTrainer",
+                                                            default_policy=ConditionalActionVTraceTorchPolicy,
                                                             get_policy_class=get_vtrace_policy_class)

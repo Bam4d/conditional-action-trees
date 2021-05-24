@@ -11,10 +11,10 @@ from griddly import gd
 from griddly.util.rllib.callbacks import VideoCallback
 from griddly.util.rllib.environment.core import RLlibEnv
 from griddly.util.rllib.torch.agents.conv_agent import SimpleConvAgent
-from griddly.util.rllib.torch.conditional_actions.conditional_action_policy_trainer import \
-    ConditionalActionImpalaTrainer
 
 import argparse
+
+from conditional_action_trees.conditional_action_policy_trainer import ConditionalActionImpalaTrainer
 
 parser = argparse.ArgumentParser(description='Run experiments')
 
