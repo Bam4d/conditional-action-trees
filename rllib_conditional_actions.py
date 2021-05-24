@@ -11,10 +11,10 @@ from griddly import gd
 from griddly.util.rllib.callbacks import VideoCallback
 from griddly.util.rllib.environment.core import RLlibEnv
 from griddly.util.rllib.torch.agents.conv_agent import SimpleConvAgent
-from griddly.util.rllib.torch.conditional_actions.conditional_action_policy_trainer import \
-    ConditionalActionImpalaTrainer
 
 import argparse
+
+from conditional_action_trees.conditional_action_policy_trainer import ConditionalActionImpalaTrainer
 
 parser = argparse.ArgumentParser(description='Run experiments')
 
@@ -87,7 +87,6 @@ if __name__ == '__main__':
             'allow_nop': args.allow_nop,
             'invalid_action_masking': tune.grid_search(['conditional', 'collapsed']),
             'vtrace_masking': args.vtrace_masking,
-            #'invalid_action_masking': 'conditional',
             'generate_valid_action_trees': True,
             #'level': 0,
             'random_level_on_reset': True,
